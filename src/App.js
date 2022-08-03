@@ -21,7 +21,7 @@ function App() {
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
-      .map((card) => ({ ...card, id: Math.random() }));
+      .map(card => ({ ...card, id: Math.random() }));
 
     setCards(shuffledCards);
     setTurns(0);
@@ -35,10 +35,10 @@ function App() {
   //compare 2 selected cards
   useEffect(() => {
     if (choiceOne && choiceTwo) {
-      if (choiceTwo.card.src === choiceOne.card.src) {
+      if (choiceTwo.src === choiceOne.src) {
         setCards(prevCards=>{
           return  prevCards.map(card=>{
-            if(card.src===choiceOne.card.src){
+            if(card.src===choiceOne.src){
               return {...card,matched:true}
             } else{
               return card
@@ -46,9 +46,9 @@ function App() {
           })
         })
       } else {
-      
+        
       }
-      resetTurn();
+      setTimeout(()=>resetTurn(),1000);
     }
   }, [choiceOne, choiceTwo]);
 
@@ -60,7 +60,6 @@ function App() {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurn) => prevTurn + 1);
-    console.log("resetting");
   };
 
   return (
@@ -69,8 +68,13 @@ function App() {
       <button onClick={shuffleCards}>New Game</button>
 
       <div className="card-grid">
-        {cards.map((card) => (
-          <SingleCard card={card} key={card.id} handleChoice={handleChoice} />
+        {cards.map(card => (
+          <SingleCard 
+            card={card} 
+            key={card.id} 
+            handleChoice={handleChoice} 
+            flipped={card===choiceOne || card === choiceTwo || card.matched} 
+            />
         ))}
       </div>
     </div>
